@@ -1,5 +1,5 @@
 //query-selectors
-function whole(){
+// function whole(){
 const inputBox = document.querySelector("#inputtask");
 const inputButton = document.querySelector(".button");
 const showtasks = document.querySelector(".showtasks");
@@ -62,6 +62,7 @@ function createTaskName(showtasks1, taskName) {
     taskname.value = taskName;
     taskname.readOnly=true;
     taskname.maxLength=150;
+    taskname.style.backgroundColor="aliceblue";
     if (showtasks1.state === 1) {
         taskname.style.backgroundColor = "#D0D0D0";
     }
@@ -426,8 +427,4 @@ function loadTasksFromLocalStorage() {
         }
     });
     checkForEmptyStates(currentFilter);
-}
-}
-module.exports={
-    whole
 }
