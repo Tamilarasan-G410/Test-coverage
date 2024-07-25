@@ -542,11 +542,8 @@ describe('Javascript testing', () => {
       addTask('Task 2', 'completed');
       assigned.click();
       filterTasks('assigned');
-      let tasks = showtasks.querySelectorAll(".showtasks1");
-      let assignedTasks = Array.from(tasks).filter(task => 
-        task.getAttribute('data-status') === 'assigned'
-          )
-        expect(assignedTasks.length).toBe(1)
+      let tasks = showtasks.querySelectorAll(".showtasks1[data-status='assigned']");
+      expect(tasks.length).toBe(1);
     });
 
     test('should show only completed tasks when "completed" filter is selected', () => {
@@ -554,11 +551,8 @@ describe('Javascript testing', () => {
       addTask('Task 2', 'completed');
       completed.click();
       filterTasks('completed');
-      let tasks = showtasks.querySelectorAll(".showtasks1");
-      let completedTasks = Array.from(tasks).filter(task => 
-        task.getAttribute('data-status') === 'completed'
-          )
-        expect(completedTasks.length).toBe(1)
+      let tasks = showtasks.querySelectorAll(".showtasks1[data-status='completed']");
+      expect(tasks.length).toBe(1);
     });
 
     test('should show no tasks when "completed" filter is selected and there are no completed tasks', () => {
@@ -566,11 +560,8 @@ describe('Javascript testing', () => {
       addTask('Task 2');
       completed.click();
       filterTasks('completed');
-      let tasks = showtasks.querySelectorAll(".showtasks1");
-      let completedTasks = Array.from(tasks).filter(task => 
-        task.getAttribute('data-status') === 'completed'
-          )
-        expect(completedTasks.length).toBe(0)
+      let tasks = showtasks.querySelectorAll(".showtasks1[data-status='completed']");
+      expect(tasks.length).toBe(0);
     });
 
     test('should show no tasks when "assigned" filter is selected and there are no assigned tasks', () => {
@@ -578,15 +569,11 @@ describe('Javascript testing', () => {
       addTask('Task 2', 'completed');
       assigned.click();
       filterTasks('assigned');
-      let tasks = showtasks.querySelectorAll(".showtasks1");
-      let assignedTasks = Array.from(tasks).filter(task => 
-        task.getAttribute('data-status') === 'assigned'
-          )
-        expect(assignedTasks.length).toBe(0)
+      let tasks = showtasks.querySelectorAll(".showtasks1[data-status='assigned']");
+      expect(tasks.length).toBe(0);
     });
+
   });
-
-
   describe('Delete all tasks depending upon the filter testing', () => {
     beforeEach(()=>{
     })
