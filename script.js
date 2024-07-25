@@ -1,5 +1,4 @@
 //query-selectors
-// function whole(){
 const inputBox = document.querySelector("#inputtask");
 const inputButton = document.querySelector(".button");
 const showtasks = document.querySelector(".showtasks");
@@ -63,9 +62,6 @@ function createTaskName(showtasks1, taskName) {
     taskname.readOnly=true;
     taskname.maxLength=150;
     taskname.style.backgroundColor="aliceblue";
-    if (showtasks1.state === 1) {
-        taskname.style.backgroundColor = "#D0D0D0";
-    }
     showtasks1.append(taskname); 
 }
 //function to create the buttons
@@ -186,10 +182,10 @@ function editTask(showtasks1) {
         saveTask();
     }
 
-    taskname.addEventListener("focus", () => {
-        taskname.classList.remove("error");
-        taskname.placeholder = '';
-    });
+    // taskname.addEventListener("focus", () => {
+    //     taskname.classList.remove("error");
+    //     taskname.placeholder = '';
+    // });
 
     taskname.addEventListener("input", () => {
         if (taskname.classList.contains("error")) {
@@ -225,7 +221,11 @@ function completeTask(showtasks1) {
         eb.disabled = false;
     }
     saveTasksToLocalStorage();
-
+    filterTasks(currentFilter);
+    checkForEmptyStates(currentFilter);
+}
+function filterTasks(currentFilter){
+    
     if (currentFilter === "all") {
         allTasks();
     } else if (currentFilter === "completed") {
@@ -233,21 +233,12 @@ function completeTask(showtasks1) {
     } else if (currentFilter === "assigned") {
         assignedTasks();
     }
-
-    checkForEmptyStates(currentFilter);
 }
-
 //function which facilitates  deleting the task
 function deleteTask(showtasks1) {
     showtasks1.remove();
     saveTasksToLocalStorage();
-    if (currentFilter === "all") {
-        allTasks();
-    } else if (currentFilter === "completed") {
-        completedTasks();
-    } else if (currentFilter === "assigned") {
-        assignedTasks();
-    }
+    filterTasks(currentFilter)
 }
 // Function to show toast notification
 function showToast(message, onConfirm, onCancel) {
@@ -427,4 +418,9 @@ function loadTasksFromLocalStorage() {
         }
     });
     checkForEmptyStates(currentFilter);
+}
+window.loadTasksFromLocalStorage=loadTasksFromLocalStorage;
+module.exports={
+    showToast,
+    filterTasks,
 }
