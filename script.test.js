@@ -169,11 +169,10 @@ describe('Javascript testing', () => {
 
     jest.resetModules();
     require('./script.js');
+
     jest.useFakeTimers();
     jest.spyOn(global, 'setTimeout');
-    
 
-    // Mock localStorage
     const localStorageMock = {
         getItem: jest.fn(),
         setItem: jest.fn(),
@@ -186,7 +185,6 @@ describe('Javascript testing', () => {
     });
   })
   afterEach(() => {
-    // Clear mock localStorage methods
     localStorage.getItem.mockClear();
     localStorage.setItem.mockClear();
     localStorage.removeItem.mockClear();
@@ -318,7 +316,7 @@ describe('Javascript testing', () => {
       checkButton.click();
 
       expect(task.getAttribute("data-status")).toBe('completed');
-      expect(window.getComputedStyle(taskName).backgroundColor).toBe('rgb(208, 208, 208)'); // #D0D0D0 in RGB format
+      expect(window.getComputedStyle(taskName).backgroundColor).toBe('rgb(208, 208, 208)'); 
       expect(checkButton.querySelector(".checkbtni").src).toContain('check-mark.png');
       expect(localStorage.setItem).toHaveBeenCalled();
     });
@@ -460,8 +458,8 @@ describe('Javascript testing', () => {
       const editButton2= tasks[1].querySelector(".editbtn");
       editButton1.click();
       editButton2.click();
-      expect(tasks[0].querySelector(".taskname").readOnly).toBe(false); // First task should still be readonly
-      expect(tasks[1].querySelector(".taskname").readOnly).toBe(true); // Second task should be editable
+      expect(tasks[0].querySelector(".taskname").readOnly).toBe(false); 
+      expect(tasks[1].querySelector(".taskname").readOnly).toBe(true); 
     });
 
     test('Delete all button should be disabled while editing',()=>{
@@ -521,13 +519,12 @@ describe('Javascript testing', () => {
       const taskContainers = document.querySelectorAll('.showtasks1');
         expect(taskContainers.length).toBe(2);
 
-        // Verify the first task
         const firstTask = taskContainers[0];
         expect(firstTask.querySelector('.taskname').value).toBe('Task 1');
         expect(firstTask.getAttribute('data-status')).toBe('assigned');
         expect(firstTask.querySelector('.checkbtni').src).toContain('radio-button.png');
 
-        // Verify the second task
+       
         const secondTask = taskContainers[1];
         expect(secondTask.querySelector('.taskname').value).toBe('Task 2');
         expect(secondTask.getAttribute('data-status')).toBe('completed');
@@ -535,14 +532,14 @@ describe('Javascript testing', () => {
     });
   
     test('should not display any tasks if localStorage is empty', () => {
-      // Mock localStorage.getItem to return an empty array
+      
       localStorage.getItem.mockReturnValue(JSON.stringify([]));
       window.loadTasksFromLocalStorage();
       const tasks = showtasks.querySelectorAll(".showtasks1");
       expect(tasks.length).toBe(0);
     });
     test('should persist tasks after page reload', () => {
-      window.loadTasksFromLocalStorage(); // Call the function to load tasks
+      window.loadTasksFromLocalStorage(); 
       const tasks = showtasks.querySelectorAll(".showtasks1");
       expect(tasks.length).toBe(2);
     });
@@ -640,7 +637,7 @@ describe('Javascript testing', () => {
       expect(global.overlay.style.display).toBe('block');
       expect(global.toastMessage.textContent).toBe('Test Message');
   
-      // Simulate clicking the confirm button
+      
       global.toastConfirm.dispatchEvent(new Event('click'));
   
       expect(onConfirm).toHaveBeenCalled();
@@ -657,7 +654,7 @@ describe('Javascript testing', () => {
       expect(global.overlay.style.display).toBe('block');
       expect(global.toastMessage.textContent).toBe('Test Message');
   
-      // Simulate clicking the cancel button
+      
       global.toastCancel.dispatchEvent(new Event('click'));
   
       expect(onCancel).toHaveBeenCalled();
@@ -674,7 +671,7 @@ describe('Javascript testing', () => {
       expect(global.toast.style.display).toBe('flex');
       expect(global.overlay.style.display).toBe('block');
   
-      // Fast-forward 10 seconds
+     
       jest.advanceTimersByTime(10000);
   
       expect(global.toast.style.display).toBe('none');
@@ -762,7 +759,7 @@ describe('Javascript testing', () => {
     });
   
     test('should display no assigned tasks message when there are no assigned tasks', () => {
-      // Add a task to the showtasks container
+      
       addTask('Task 1', 'completed');
       addTask('Task 2', 'completed');
       assigned.click();
@@ -779,7 +776,7 @@ describe('Javascript testing', () => {
       expect(noCompletedTasksMessage.style.display).toBe('none')
     });
     test('should display no completed tasks message when there are no completed tasks', () => {
-      // Add a task to the showtasks container
+      
       addTask('Task 1');
       addTask('Task 2');
       assigned.click();
