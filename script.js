@@ -308,7 +308,7 @@ function updateDeleteAllButtonText(currentFilter){
     } else if(currentFilter==="assigned"){
         deleteAllButton.innerHTML="Delete all assigned tasks";
         deleteAllButton.title="Delete all assigned tasks";
-    } else{
+    } else if(currentFilter==="completed"){
         deleteAllButton.innerHTML="Delete all completed tasks";
         deleteAllButton.title="Delete all completed tasks";
     }
@@ -423,5 +423,10 @@ window.loadTasksFromLocalStorage=loadTasksFromLocalStorage;
 module.exports={
     showToast,
     filterTasks,
-    addTask
+    assignedTasks,
+    allTasks,
+    completedTasks,
+    checkForEmptyStates,
+    updateDeleteAllButtonText,
+    createButton
 }
