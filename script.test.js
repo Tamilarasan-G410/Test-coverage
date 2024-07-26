@@ -13,8 +13,9 @@ describe('Javascript testing', () => {
   let assigned;
   let completed;
   let all;
-
-  
+  let noTasksMessage;
+  let noAssignedTasksMessage;
+  let noCompletedTasksMessage; 
 
   beforeEach(() => {
     const html = fs.readFileSync(path.resolve(__dirname, 'todolist.html'), 'utf8');
@@ -30,11 +31,16 @@ describe('Javascript testing', () => {
     assigned = document.querySelector("#assigned");
     completed = document.querySelector("#completed");
     all = document.querySelector("#all");
+    noTasksMessage = document.querySelector('.no-tasks-message');
+    noAssignedTasksMessage = document.querySelector('.no-assigned-tasks-message');
+    noCompletedTasksMessage = document.querySelector('.no-completed-tasks-message');
 
     jest.resetModules();
     require('./script.js');
     jest.useFakeTimers();
     jest.spyOn(global, 'setTimeout');
+    
+
     // Mock localStorage
     const localStorageMock = {
         getItem: jest.fn(),
@@ -446,7 +452,7 @@ describe('Javascript testing', () => {
     })
   });
 
-  describe('showToast Function', () => {
+  describe('showToast Function testing', () => {
     beforeEach(() => {
       global.toast = document.querySelector("#toast");
       global.toastMessage = document.querySelector("#toast-message");
@@ -455,7 +461,7 @@ describe('Javascript testing', () => {
       global.overlay = document.querySelector(".overlay");
   
 
-      const { showToast } = require('./script.js'); 
+      const { showToast, addTask } = require('./script.js'); 
       global.showToast = showToast;
     });
   
@@ -572,8 +578,57 @@ describe('Javascript testing', () => {
       let tasks = showtasks.querySelectorAll(".showtasks1[data-status='assigned']");
       expect(tasks.length).toBe(0);
     });
-
   });
+  describe('No task message function testing',()=>{
+      
+    
+      const addTask = (taskName, status = 'assigned') => {
+        inputBox.value = taskName;
+        form.dispatchEvent(new Event('submit'));
+        const task = showtasks.querySelector(".showtasks1:last-child");
+        task.setAttribute('data-status', status);
+      };
+
+    test('should display the no tasks available message when there are no tasks', () => {
+      expect(noTasksMessage.style.display).toBe('block');
+    });
+  
+    test('should display no assigned tasks message when there are no assigned tasks', () => {
+      // Add a task to the showtasks container
+      addTask('Task 1', 'completed');
+      addTask('Task 2', 'completed');
+      assigned.click();
+      expect(noTasksMessage.style.display).toBe('none');
+      expect(noAssignedTasksMessage.style.display).toBe('block')
+      expect(noCompletedTasksMessage.style.display).toBe('none')
+      all.click();
+      expect(noTasksMessage.style.display).toBe('none');
+      expect(noAssignedTasksMessage.style.display).toBe('none')
+      expect(noCompletedTasksMessage.style.display).toBe('none')
+      completed.click();
+      expect(noTasksMessage.style.display).toBe('none');
+      expect(noAssignedTasksMessage.style.display).toBe('none')
+      expect(noCompletedTasksMessage.style.display).toBe('none')
+    });
+    test('should display no completed tasks message when there are no completed tasks', () => {
+      // Add a task to the showtasks container
+      addTask('Task 1');
+      addTask('Task 2');
+      assigned.click();
+      expect(noTasksMessage.style.display).toBe('none');
+      expect(noAssignedTasksMessage.style.display).toBe('none')
+      expect(noCompletedTasksMessage.style.display).toBe('none')
+      all.click();
+      expect(noTasksMessage.style.display).toBe('none');
+      expect(noAssignedTasksMessage.style.display).toBe('none')
+      expect(noCompletedTasksMessage.style.display).toBe('none')
+      completed.click();
+      expect(noTasksMessage.style.display).toBe('none');
+      expect(noAssignedTasksMessage.style.display).toBe('none')
+      expect(noCompletedTasksMessage.style.display).toBe('block')
+    });
+  })
+ 
   describe('Delete all tasks depending upon the filter testing', () => {
     beforeEach(()=>{
     })
@@ -623,4 +678,4 @@ describe('Javascript testing', () => {
       expect(errormessage.innerHTML).toBe("Tasks deleted successfully.");
     });
   });
-})
+});

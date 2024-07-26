@@ -197,7 +197,7 @@ function editTask(showtasks1) {
     taskname.addEventListener("keydown", (event) => {
         if (event.key === "Enter") {
             saveTask();
-        }
+        } 
     });
 }
 // Function which facilitates completion of tasks
@@ -230,7 +230,7 @@ function filterTasks(currentFilter){
         allTasks();
     } else if (currentFilter === "completed") {
         completedTasks();
-    } else if (currentFilter === "assigned") {
+    } else   {
         assignedTasks();
     }
 }
@@ -286,7 +286,7 @@ function deleteAllTasks() {
             tasksToRemove = Array.from(taskContainers);
         } else if (currentFilter === "assigned") {
             tasksToRemove = Array.from(taskContainers).filter(task => task.getAttribute("data-status") === "assigned");
-        } else if (currentFilter === "completed") {
+        } else {
             tasksToRemove = Array.from(taskContainers).filter(task => task.getAttribute("data-status") === "completed");
         }
 
@@ -308,7 +308,7 @@ function updateDeleteAllButtonText(currentFilter){
     } else if(currentFilter==="assigned"){
         deleteAllButton.innerHTML="Delete all assigned tasks";
         deleteAllButton.title="Delete all assigned tasks";
-    } else if(currentFilter==="completed"){
+    } else{
         deleteAllButton.innerHTML="Delete all completed tasks";
         deleteAllButton.title="Delete all completed tasks";
     }
@@ -423,4 +423,5 @@ window.loadTasksFromLocalStorage=loadTasksFromLocalStorage;
 module.exports={
     showToast,
     filterTasks,
+    addTask
 }
