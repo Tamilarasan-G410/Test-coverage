@@ -305,6 +305,7 @@ function deleteAllTasks() {
 function updateDeleteAllButtonText(currentFilter){
     if(currentFilter==="all"){
         deleteAllButton.innerHTML="Delete all tasks";
+        deleteAllButton.title="Delete all tasks"
     } else if(currentFilter==="assigned"){
         deleteAllButton.innerHTML="Delete all assigned tasks";
         deleteAllButton.title="Delete all assigned tasks";
