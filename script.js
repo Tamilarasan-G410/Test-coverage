@@ -420,7 +420,6 @@ function loadTasksFromLocalStorage() {
     });
     checkForEmptyStates(currentFilter);
 }
-window.loadTasksFromLocalStorage=loadTasksFromLocalStorage;
 module.exports={
     showToast,
     filterTasks,
@@ -429,5 +428,6 @@ module.exports={
     completedTasks,
     checkForEmptyStates,
     updateDeleteAllButtonText,
-    createButton
+    createButton,
+    loadTasksFromLocalStorage
 }

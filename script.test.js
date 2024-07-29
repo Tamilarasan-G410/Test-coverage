@@ -515,7 +515,8 @@ describe('Javascript testing', () => {
     });
   
     test('should load tasks from localStorage on DOMContentLoaded', () => {
-      window.loadTasksFromLocalStorage();
+      const {loadTasksFromLocalStorage}=require("./script.js")
+      loadTasksFromLocalStorage();
       const taskContainers = document.querySelectorAll('.showtasks1');
         expect(taskContainers.length).toBe(2);
 
@@ -532,14 +533,15 @@ describe('Javascript testing', () => {
     });
   
     test('should not display any tasks if localStorage is empty', () => {
-      
+      const {loadTasksFromLocalStorage}=require("./script.js")
       localStorage.getItem.mockReturnValue(JSON.stringify([]));
-      window.loadTasksFromLocalStorage();
+      loadTasksFromLocalStorage();
       const tasks = showtasks.querySelectorAll(".showtasks1");
       expect(tasks.length).toBe(0);
     });
     test('should persist tasks after page reload', () => {
-      window.loadTasksFromLocalStorage(); 
+      const {loadTasksFromLocalStorage}=require("./script.js")
+      loadTasksFromLocalStorage(); 
       const tasks = showtasks.querySelectorAll(".showtasks1");
       expect(tasks.length).toBe(2);
     });
