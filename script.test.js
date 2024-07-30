@@ -115,7 +115,10 @@ describe('Javascript testing', () => {
     noCompletedTasksMessage = document.querySelector('.no-completed-tasks-message');
 
     jest.resetModules();
-    require('./script.js');
+    const script = require('./script.js');
+  
+    // Destructure required functions
+    ({ showToast, filterTasks, assignedTasks, allTasks, completedTasks, checkForEmptyStates, updateDeleteAllButtonText, createButton, loadTasksFromLocalStorage } = script);
 
     // mock timers
     jest.useFakeTimers();
@@ -143,7 +146,6 @@ describe('Javascript testing', () => {
 
   describe('Add functionality testing', () => {
     test('should add a new task when input is valid', () => {
-
       const randomString = chance.string();
       inputBox.value = randomString;
       form.dispatchEvent(new Event('submit'));
@@ -190,6 +192,7 @@ describe('Javascript testing', () => {
     test('should add a new task when input is valid when the add button is pressed', () => {
       const randomString = chance.string();
       inputBox.value = randomString;
+      expect(inputButton.disabled).toBe(false);
       inputButton.dispatchEvent(new Event('click'));
 
       const tasks = showtasks.querySelectorAll(".showtasks1");
@@ -237,6 +240,7 @@ describe('Javascript testing', () => {
 
       const deleteButton = tasks[0].querySelector(".deletebtn");
       expect(deleteButton.querySelector(".deletebtni").src).toContain('bin.png');
+      expect(deleteButton.disabled).toBe(false);
       deleteButton.click();
 
       tasks = showtasks.querySelectorAll(".showtasks1");
@@ -261,7 +265,7 @@ describe('Javascript testing', () => {
       const computedStyle = window.getComputedStyle(taskName);
       expect(computedStyle.backgroundColor).toBe('aliceblue');
       expect(checkButton.querySelector(".checkbtni").src).toContain('radio-button.png');
-
+      expect(checkButton.disabled).toBe(false);
       checkButton.click();
 
       expect(task.getAttribute("data-status")).toBe('completed');
@@ -299,6 +303,7 @@ describe('Javascript testing', () => {
       form.dispatchEvent(new Event('submit'));
       let tasksBeforeDeleteAll = showtasks.querySelectorAll(".showtasks1");
       expect(tasksBeforeDeleteAll.length).toBe(2);
+      expect(deleteAllButton.disabled).toBe(false);
       deleteAllButton.click();
       const toastConfirm = document.querySelector("#toast-confirm");
       toastConfirm.click();
@@ -464,7 +469,7 @@ describe('Javascript testing', () => {
     });
   
     test('should load tasks from localStorage on DOMContentLoaded', () => {
-      const {loadTasksFromLocalStorage}=require("./script.js")
+      // const {loadTasksFromLocalStorage}=require("./script.js")
       loadTasksFromLocalStorage();
       const taskContainers = document.querySelectorAll('.showtasks1');
         expect(taskContainers.length).toBe(2);
@@ -482,14 +487,14 @@ describe('Javascript testing', () => {
     });
   
     test('should not display any tasks if localStorage is empty', () => {
-      const {loadTasksFromLocalStorage}=require("./script.js")
+      // const {loadTasksFromLocalStorage}=require("./script.js")
       localStorage.getItem.mockReturnValue(JSON.stringify([]));
       loadTasksFromLocalStorage();
       const tasks = showtasks.querySelectorAll(".showtasks1");
       expect(tasks.length).toBe(0);
     });
     test('should persist tasks after page reload', () => {
-      const {loadTasksFromLocalStorage}=require("./script.js")
+      // const {loadTasksFromLocalStorage}=require("./script.js")
       loadTasksFromLocalStorage(); 
       const tasks = showtasks.querySelectorAll(".showtasks1");
       expect(tasks.length).toBe(2);
@@ -576,7 +581,7 @@ describe('Javascript testing', () => {
     });
   
     test('should display toast and overlay, and call onConfirm when confirm button is clicked', () => {
-      const { showToast } = require('./script.js'); 
+      // const { showToast } = require('./script.js'); 
       const onConfirm = jest.fn();
   
       showToast('Test Message', onConfirm, () => {});
@@ -594,7 +599,7 @@ describe('Javascript testing', () => {
     });
   
     test('should display toast and overlay, and call onCancel when cancel button is clicked', () => {
-      const { showToast } = require('./script.js'); 
+      // const { showToast } = require('./script.js'); 
       const onCancel = jest.fn();
       showToast('Test Message', () => {}, onCancel);
   
@@ -611,7 +616,7 @@ describe('Javascript testing', () => {
     });
   
     test('should hide toast and overlay after 10 seconds if no action is taken', () => {
-      const { showToast} = require('./script.js'); 
+      // const { showToast} = require('./script.js'); 
       jest.useFakeTimers();
       const onCancel = jest.fn();
       showToast('Test Message', () => {}, onCancel);
@@ -631,9 +636,9 @@ describe('Javascript testing', () => {
   });
 
   describe('filterTasks function', () => {
-    beforeEach(() => {
-      filterTasks = require('./script.js').filterTasks;
-    });
+    // beforeEach(() => {
+    //   filterTasks = require('./script.js').filterTasks;
+    // });
 
     const addTask = (taskName, status = 'assigned') => {
       inputBox.value = taskName;
@@ -793,7 +798,7 @@ describe('Javascript testing', () => {
     test('Testing assigned tasks function',()=>{
       inputBox.value='task';
       inputButton.click()
-      const {assignedTasks}=require("./script.js")
+      // const {assignedTasks}=require("./script.js")
       assignedTasks()
       const tasks=document.querySelectorAll(".showtasks1")
       tasks.forEach(task => {
@@ -805,7 +810,7 @@ describe('Javascript testing', () => {
       inputButton.click()
       inputBox.value='task2';
       inputButton.click()
-      const {allTasks}=require("./script.js")
+      // const {allTasks}=require("./script.js")
       allTasks()
       const tasks=document.querySelectorAll(".showtasks1")
       tasks.forEach(task => {
@@ -822,7 +827,7 @@ describe('Javascript testing', () => {
       const checkButton2 = tasks[1].querySelector(".checkbtn");
       checkButton1.click()
       checkButton2.click()
-      const {completedTasks}=require("./script.js")
+      // const {completedTasks}=require("./script.js")
       completedTasks()
       tasks.forEach(task => {
         expect(task.style.display).toBe('flex');
@@ -836,7 +841,7 @@ describe('Javascript testing', () => {
       const tasks = showtasks.querySelectorAll(".showtasks1");
       const checkButton1 = tasks[0].querySelector(".checkbtn");
       checkButton1.click()
-      const {checkForEmptyStates}=require("./script.js")
+      // const {checkForEmptyStates}=require("./script.js")
       checkForEmptyStates(assigned)
       expect(noTasksMessage.style.display).toBe('none');
       expect(noAssignedTasksMessage.style.display).toBe('none')
@@ -852,7 +857,7 @@ describe('Javascript testing', () => {
     })
     
     test('update delete all button text function testing',()=>{
-      const {updateDeleteAllButtonText}=  require('./script.js')
+      // const {updateDeleteAllButtonText}=  require('./script.js')
       all.click()
       updateDeleteAllButtonText();
       expect(deleteAllButton.innerHTML).toBe("Delete all Tasks")
@@ -868,7 +873,7 @@ describe('Javascript testing', () => {
     test('Create button function testing',()=>{
       inputBox.value='task'
       inputButton.click()
-      const {createButton}=require("./script.js")
+      // const {createButton}=require("./script.js")
       const task = showtasks.querySelector(".showtasks1");
       createButton("editbtn", "./images/edit.png", "editbtni","Edit the task")
       const button=task.querySelector('.editbtn')
