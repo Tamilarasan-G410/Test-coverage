@@ -38,6 +38,7 @@ describe('HTML Testing', () => {
     //Whether the add button is displayed and check its title and type
     expect(addButton).not.toBeNull();
     expect(addButton.textContent).toBe('Add');
+    expect(addButton.disabled).toBe(false)
     expect(addButton.getAttribute('type')).toBe('submit');
     
     //Whether the nav bar is displayed
@@ -68,6 +69,7 @@ describe('HTML Testing', () => {
     //Whether the delete all button is displayed and check its title
     expect(deleteAllButton).not.toBeNull();
     expect(deleteAllButton.textContent).toBe('Delete all Tasks');
+    expect(deleteAllButton.disabled).toBe(false)
    
     //Whether the errormessage is present and empty initially
     expect(errormessagecontainer).not.toBeNull();
@@ -95,6 +97,11 @@ describe('Javascript testing', () => {
   let noTasksMessage;
   let noAssignedTasksMessage;
   let noCompletedTasksMessage; 
+  let navBarElement;
+  let allRadioButton;
+  let assignedRadioButton;
+  let completedRadioButton;
+
 
   beforeEach(() => {
     const html = fs.readFileSync(path.resolve(__dirname, 'todolist.html'), 'utf8');
@@ -113,12 +120,16 @@ describe('Javascript testing', () => {
     noTasksMessage = document.querySelector('.no-tasks-message');
     noAssignedTasksMessage = document.querySelector('.no-assigned-tasks-message');
     noCompletedTasksMessage = document.querySelector('.no-completed-tasks-message');
+    navBarElement = document.querySelector('nav');
+    allRadioButton = navBarElement.querySelector('#all');
+    assignedRadioButton = navBarElement.querySelector('#assigned');
+    completedRadioButton = navBarElement.querySelector('#completed');
 
     jest.resetModules();
     const script = require('./script.js');
   
     // Destructure required functions
-    ({ showToast, filterTasks, assignedTasks, allTasks, completedTasks, checkForEmptyStates, updateDeleteAllButtonText, createButton, loadTasksFromLocalStorage } = script);
+    ({ showToast, filterTasks, assignedTasks, allTasks, completedTasks, checkForEmptyStates, updateDeleteAllButtonText, createButton} = script);
 
     // mock timers
     jest.useFakeTimers();
@@ -156,6 +167,9 @@ describe('Javascript testing', () => {
       expect(setTimeout).toHaveBeenCalledTimes(1);
       expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 1500);
       jest.runAllTimers();
+      expect(allRadioButton.checked).toBe(true)
+      expect(assignedRadioButton.checked).toBe(false)
+      expect(completedRadioButton.checked).toBe(false)
       expect(errormessage.innerHTML).toBe("");
       expect(localStorage.setItem).toHaveBeenCalledWith("tasks", JSON.stringify([{ name: randomString, status: "assigned" }]));
     });
@@ -190,6 +204,7 @@ describe('Javascript testing', () => {
     });
 
     test('should add a new task when input is valid when the add button is pressed', () => {
+      
       const randomString = chance.string();
       inputBox.value = randomString;
       expect(inputButton.disabled).toBe(false);
@@ -225,14 +240,16 @@ describe('Javascript testing', () => {
 
   describe("Delete functionality testing", () => {
     test('should delete a specific task when its delete button is clicked', () => {
-      inputBox.value = 'Task to delete';
+      const randomString = chance.string();
+      inputBox.value = randomString;
       form.dispatchEvent(new Event('submit'));
 
       let tasks = showtasks.querySelectorAll(".showtasks1");
       expect(tasks.length).toBe(1);
-      expect(tasks[0].querySelector(".taskname").value).toBe('Task to delete');
+      expect(tasks[0].querySelector(".taskname").value).toBe(randomString);
 
-      inputBox.value = 'Another task';
+      const randomString2 = chance.string();
+      inputBox.value = randomString2;
       form.dispatchEvent(new Event('submit'));
 
       tasks = showtasks.querySelectorAll(".showtasks1");
@@ -245,14 +262,15 @@ describe('Javascript testing', () => {
 
       tasks = showtasks.querySelectorAll(".showtasks1");
       expect(tasks.length).toBe(1);
-      expect(tasks[0].querySelector(".taskname").value).toBe('Another task');
+      expect(tasks[0].querySelector(".taskname").value).toBe(randomString2);
       expect(localStorage.setItem).toHaveBeenCalled();
     });
   });
 
   describe("Complete task functionality testing", () => {
     test('should mark a task as completed when the completion button is clicked', () => {
-      inputBox.value = 'Task to complete';
+      const randomString = chance.string();
+      inputBox.value = randomString;
       form.dispatchEvent(new Event('submit'));
 
       const tasks = showtasks.querySelectorAll(".showtasks1");
@@ -275,7 +293,8 @@ describe('Javascript testing', () => {
     });
 
     test('should unmark a task as completed when the completion button is clicked again', () => {
-      inputBox.value = 'Completed task';
+      const randomString = chance.string();
+      inputBox.value = randomString;
       form.dispatchEvent(new Event('submit'));
 
       const tasks = showtasks.querySelectorAll(".showtasks1");
@@ -297,9 +316,11 @@ describe('Javascript testing', () => {
   });
   describe("Delete-all functionality testing",()=>{
     test('should delete all tasks when delete all button is clicked', () => {
-      inputBox.value = 'Task 1';
+      const randomString = chance.string();
+      inputBox.value = randomString;
       form.dispatchEvent(new Event('submit'));
-      inputBox.value = 'Task 2';
+      const randomString2 = chance.string();
+      inputBox.value = randomString2;
       form.dispatchEvent(new Event('submit'));
       let tasksBeforeDeleteAll = showtasks.querySelectorAll(".showtasks1");
       expect(tasksBeforeDeleteAll.length).toBe(2);
@@ -461,6 +482,7 @@ describe('Javascript testing', () => {
   })
   describe('Load tasks from local storage', () => {
     beforeEach(() => {
+      loadTasksFromLocalStorage = require('./script.js').loadTasksFromLocalStorage;
       const mockTasks = [
         { name: 'Task 1', status: 'assigned' },
         { name: 'Task 2', status: 'completed' }
@@ -469,7 +491,6 @@ describe('Javascript testing', () => {
     });
   
     test('should load tasks from localStorage on DOMContentLoaded', () => {
-      // const {loadTasksFromLocalStorage}=require("./script.js")
       loadTasksFromLocalStorage();
       const taskContainers = document.querySelectorAll('.showtasks1');
         expect(taskContainers.length).toBe(2);
@@ -487,14 +508,12 @@ describe('Javascript testing', () => {
     });
   
     test('should not display any tasks if localStorage is empty', () => {
-      // const {loadTasksFromLocalStorage}=require("./script.js")
       localStorage.getItem.mockReturnValue(JSON.stringify([]));
       loadTasksFromLocalStorage();
       const tasks = showtasks.querySelectorAll(".showtasks1");
       expect(tasks.length).toBe(0);
     });
     test('should persist tasks after page reload', () => {
-      // const {loadTasksFromLocalStorage}=require("./script.js")
       loadTasksFromLocalStorage(); 
       const tasks = showtasks.querySelectorAll(".showtasks1");
       expect(tasks.length).toBe(2);
