@@ -767,8 +767,8 @@ describe('Javascript testing', () => {
     
   });
   describe('Individual functions testing',()=>{
-    test('Testing assigned tasks function',()=>{
-      const {assignedTasks}=require("./script.js")
+    test('Testing allTasks(),assignedTaks(),completedTasks() function',()=>{
+      const {assignedTasks,allTasks,completedTasks}=require("./script.js")
       addTask(randomString);
       addTask(randomString2, 'completed');
       assignedTasks()
@@ -776,24 +776,14 @@ describe('Javascript testing', () => {
       tasks.forEach(task => {
         expect(task.style.display).toBe('flex');
       })
-    }) 
-    test('Testing all tasks function',()=>{
-      const {allTasks}=require("./script.js")
-      addTask(randomString);
-      addTask(randomString2,'completed');
       allTasks()
-      const tasks=document.querySelectorAll(".showtasks1")
-      tasks.forEach(task => {
+      const atasks=document.querySelectorAll(".showtasks1")
+      atasks.forEach(task => {
         expect(task.style.display).toBe('flex');
       })
-    }) 
-    test('Testing completed tasks function',()=>{
-      const {completedTasks}=require("./script.js")
-      addTask(randomString);
-      addTask(randomString2, 'completed');
-      const tasks = showtasks.querySelectorAll(".showtasks1[data-status='completed']");
+      const ctasks = showtasks.querySelectorAll(".showtasks1[data-status='completed']");
       completedTasks()
-      tasks.forEach(task => {
+      ctasks.forEach(task => {
         expect(task.style.display).toBe('flex');
       })
     }) 
