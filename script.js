@@ -275,7 +275,7 @@ function deleteAllTasks() {
         message = "Do you want to delete all tasks?";
     } else if (currentFilter === "assigned") {
         message = "Do you want to delete all assigned tasks?";
-    } else if (currentFilter === "completed") {
+    } else {
         message = "Do you want to delete all completed tasks?";
     }
     showToast(message, () => {
@@ -426,8 +426,9 @@ module.exports={
     assignedTasks,
     allTasks,
     completedTasks,
-    checkForEmptyStates,
     updateDeleteAllButtonText,
     createButton,
-    loadTasksFromLocalStorage
+    loadTasksFromLocalStorage,
+    deleteAllTasks,
+    checkForEmptyStates
 }
