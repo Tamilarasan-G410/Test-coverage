@@ -512,12 +512,20 @@ describe('Javascript testing', () => {
       loadTasksFromLocalStorage();
       const tasks = showtasks.querySelectorAll(".showtasks1");
       expect(tasks.length).toBe(0);
+      
+
     });
     test('should persist tasks after page reload', () => {
       loadTasksFromLocalStorage(); 
       const tasks = showtasks.querySelectorAll(".showtasks1");
       expect(tasks.length).toBe(2);
     });
+    test('should handle null from localStorage', () => {
+      localStorage.getItem.mockReturnValue(null);
+      loadTasksFromLocalStorage();
+      const tasks = document.querySelectorAll(".showtasks1");
+      expect(tasks.length).toBe(0);
+  });
     
   });
   describe('Toast message testing',()=>{
