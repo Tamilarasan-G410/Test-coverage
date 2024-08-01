@@ -293,16 +293,15 @@ describe('Javascript testing', () => {
       addTask(randomString)
       const tasks = showtasks.querySelectorAll(".showtasks1");
       expect(tasks.length).toBe(1);
-      const task = tasks[0];
-      const taskName = task.querySelector(".taskname");
-      const checkButton = task.querySelector(".checkbtn");
-      expect(task.getAttribute("data-status")).toBe('assigned');
+      const taskName = tasks[0].querySelector(".taskname");
+      const checkButton = tasks[0].querySelector(".checkbtn");
+      expect(tasks[0].getAttribute("data-status")).toBe('assigned');
       const computedStyle = window.getComputedStyle(taskName);
       expect(computedStyle.backgroundColor).toBe('aliceblue');
       expect(checkButton.querySelector(".checkbtni").src).toContain('radio-button.png');
       expect(checkButton.disabled).toBe(false);
       checkButton.click();
-      expect(task.getAttribute("data-status")).toBe('completed');
+      expect(tasks[0].getAttribute("data-status")).toBe('completed');
       expect(window.getComputedStyle(taskName).backgroundColor).toBe('rgb(208, 208, 208)'); 
       expect(checkButton.querySelector(".checkbtni").src).toContain('check-mark.png');
       expect(localStorage.setItem).toHaveBeenCalled();
