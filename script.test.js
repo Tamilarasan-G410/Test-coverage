@@ -68,7 +68,7 @@ describe('HTML Testing', () => {
     
     //Whether the delete all button is displayed and check its title
     expect(deleteAllButton).not.toBeNull();
-    expect(deleteAllButton.textContent).toBe('Delete all Tasks');
+    expect(deleteAllButton.textContent).toBe('Delete all tasks');
     expect(deleteAllButton.disabled).toBe(false)
    
     //Whether the errormessage is present and empty initially
@@ -561,7 +561,7 @@ describe('Javascript testing', () => {
       expect(errormessage.innerHTML).toBe("");
     });
     test('The label of the delete-all button should change depending upon the filter',()=>{
-      expect(deleteAllButton.innerHTML).toBe("Delete all Tasks");
+      expect(deleteAllButton.innerHTML).toBe("Delete all tasks");
       expect(deleteAllButton.title).toBe("Delete all the tasks")
       assigned.click();
       expect(deleteAllButton.innerHTML).toBe("Delete all assigned tasks");
@@ -790,7 +790,7 @@ describe('Javascript testing', () => {
       const {updateDeleteAllButtonText}=  require('./script.js')
       all.click()
       updateDeleteAllButtonText();
-      expect(deleteAllButton.innerHTML).toBe("Delete all Tasks")
+      expect(deleteAllButton.innerHTML).toBe("Delete all tasks")
       assigned.click()
       updateDeleteAllButtonText();
       expect(deleteAllButton.innerHTML).toBe("Delete all assigned tasks")
