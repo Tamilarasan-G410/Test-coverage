@@ -19,7 +19,7 @@ describe('HTML Testing', () => {
     const noTasksMessage = messageContainer.querySelector('.no-tasks-message');
     const noAssignedTasksMessage = messageContainer.querySelector('.no-assigned-tasks-message');
     const noCompletedTasksMessage = messageContainer.querySelector('.no-completed-tasks-message');
-    const showTasks = document.querySelector(".showtasks");
+    const taskContainer = document.querySelector(".task-container");
     const deleteAllButton = document.querySelector('.delete-all');
     const errormessagecontainer=document.querySelector('.error-message');
     const toastMessage=document.querySelector('.toast')
@@ -64,7 +64,7 @@ describe('HTML Testing', () => {
     expect(window.getComputedStyle(noCompletedTasksMessage).display).toBe('none');
     
     //Whether the task board is displayed 
-    expect(showTasks).not.toBeNull();
+    expect(taskContainer).not.toBeNull();
     
     //Whether the delete all button is displayed and check its title
     expect(deleteAllButton).not.toBeNull();
@@ -86,7 +86,7 @@ describe('HTML Testing', () => {
 
 describe('Javascript testing', () => {
   let inputBox;
-  let showtasks;
+  let taskContainer;
   let form;
   let errormessage;
   let inputButton;
@@ -106,7 +106,7 @@ describe('Javascript testing', () => {
   const addTask = (taskName, status = 'assigned') => {
     inputBox.value = taskName;
     form.dispatchEvent(new Event('submit'));
-    const task = showtasks.querySelector(".showtasks1:last-child");
+    const task = taskContainer.querySelector(".todoTask:last-child");
     task.setAttribute('data-status', status);
   };
 
@@ -115,7 +115,7 @@ describe('Javascript testing', () => {
     document.body.innerHTML = html;
   
     inputBox = document.querySelector("#inputtask");
-    showtasks = document.querySelector(".showtasks");
+    taskContainer = document.querySelector(".task-container");
     form = document.querySelector("#form");
     errormessage = document.querySelector(".error-message");
     inputButton = document.querySelector(".button");
@@ -163,7 +163,7 @@ describe('Javascript testing', () => {
     test('should add a new task when input is valid', () => {
       inputBox.value = randomString;
       form.dispatchEvent(new Event('submit'));
-      const tasks = showtasks.querySelectorAll(".showtasks1");
+      const tasks = taskContainer.querySelectorAll(".todoTask");
       expect(tasks.length).toBe(1);
       expect(tasks[0].querySelector(".taskname").value).toBe(randomString);
       expect(errormessage.innerHTML).toBe('Task added successfully');
@@ -175,7 +175,7 @@ describe('Javascript testing', () => {
       expect(completedRadioButton.checked).toBe(false)
       expect(errormessage.innerHTML).toBe("");
       expect(localStorage.setItem).toHaveBeenCalledWith("tasks", JSON.stringify([{ name: randomString, status: "assigned" }]));
-      let ctasks = showtasks.querySelectorAll(".showtasks1[data-status='completed']");
+      let ctasks = taskContainer.querySelectorAll(".todoTask[data-status='completed']");
       expect(ctasks.length).toBe(0);
     });
     
@@ -183,7 +183,7 @@ describe('Javascript testing', () => {
       completed.click()
       inputBox.value = randomString;
       form.dispatchEvent(new Event('submit'));
-      const tasks = showtasks.querySelectorAll(".showtasks1");
+      const tasks = taskContainer.querySelectorAll(".todoTask");
       expect(tasks.length).toBe(1);
       expect(tasks[0].querySelector(".taskname").value).toBe(randomString);
       expect(errormessage.innerHTML).toBe('Task added successfully');
@@ -199,7 +199,7 @@ describe('Javascript testing', () => {
       assigned.click()
       inputBox.value = randomString;
       form.dispatchEvent(new Event('submit'));
-      const tasks = showtasks.querySelectorAll(".showtasks1");
+      const tasks = taskContainer.querySelectorAll(".todoTask");
       expect(tasks.length).toBe(1);
       expect(tasks[0].querySelector(".taskname").value).toBe(randomString);
       expect(errormessage.innerHTML).toBe('Task added successfully');
@@ -215,7 +215,7 @@ describe('Javascript testing', () => {
       inputBox.value = '';
       form.dispatchEvent(new Event('submit'));
 
-      const tasks = showtasks.querySelectorAll(".showtasks1");
+      const tasks = taskContainer.querySelectorAll(".todoTask");
       expect(tasks.length).toBe(0);
       expect(errormessage.innerHTML).toBe('Taskname cannot be empty.');
       expect(setTimeout).toHaveBeenCalledTimes(1);
@@ -229,7 +229,7 @@ describe('Javascript testing', () => {
       inputBox.value = ' New Task';
       form.dispatchEvent(new Event('submit'));
 
-      const tasks = showtasks.querySelectorAll(".showtasks1");
+      const tasks = taskContainer.querySelectorAll(".todoTask");
       expect(tasks.length).toBe(0);
       expect(errormessage.innerHTML).toBe('Taskname cannot start with a space.');
       expect(setTimeout).toHaveBeenCalledTimes(1);
@@ -244,7 +244,7 @@ describe('Javascript testing', () => {
       expect(inputButton.disabled).toBe(false);
       inputButton.dispatchEvent(new Event('click'));
 
-      const tasks = showtasks.querySelectorAll(".showtasks1");
+      const tasks = taskContainer.querySelectorAll(".todoTask");
       expect(tasks.length).toBe(1);
       expect(tasks[0].querySelector(".taskname").value).toBe(randomString);
       expect(errormessage.innerHTML).toBe('Task added successfully');
@@ -255,7 +255,7 @@ describe('Javascript testing', () => {
       inputBox.value = '';
       inputButton.dispatchEvent(new Event('click'));
 
-      const tasks = showtasks.querySelectorAll(".showtasks1");
+      const tasks = taskContainer.querySelectorAll(".todoTask");
       expect(tasks.length).toBe(0);
       expect(errormessage.innerHTML).toBe('Taskname cannot be empty.');
       expect(localStorage.setItem).not.toHaveBeenCalled();
@@ -265,7 +265,7 @@ describe('Javascript testing', () => {
       inputBox.value = ' New Task';
       inputButton.dispatchEvent(new Event('click'));
 
-      const tasks = showtasks.querySelectorAll(".showtasks1");
+      const tasks = taskContainer.querySelectorAll(".todoTask");
       expect(tasks.length).toBe(0);
       expect(errormessage.innerHTML).toBe('Taskname cannot start with a space.');
       expect(localStorage.setItem).not.toHaveBeenCalled();
@@ -291,7 +291,7 @@ describe('Javascript testing', () => {
   describe("Complete task functionality testing", () => {
     test('should mark a task as completed when the completion button is clicked', () => {
       addTask(randomString)
-      const tasks = showtasks.querySelectorAll(".showtasks1");
+      const tasks = taskContainer.querySelectorAll(".todoTask");
       expect(tasks.length).toBe(1);
       const taskName = tasks[0].querySelector(".taskname");
       const checkButton = tasks[0].querySelector(".checkbtn");
@@ -310,7 +310,7 @@ describe('Javascript testing', () => {
     test('should unmark a task as completed when the completion button is clicked again', () => {
       addTask(randomString)
 
-      const tasks = showtasks.querySelectorAll(".showtasks1");
+      const tasks = taskContainer.querySelectorAll(".todoTask");
       const checkButton = tasks[0].querySelector(".checkbtn");
       const taskName = tasks[0].querySelector(".taskname");
       checkButton.click();
@@ -326,17 +326,17 @@ describe('Javascript testing', () => {
   describe("Delete functionality testing", () => {
     test('should delete a specific task when its delete button is clicked', () => {
       addTask(randomString)
-      let tasks = showtasks.querySelectorAll(".showtasks1");
+      let tasks = taskContainer.querySelectorAll(".todoTask");
       expect(tasks.length).toBe(1);
       expect(tasks[0].querySelector(".taskname").value).toBe(randomString);
       addTask(randomString2)
-      tasks = showtasks.querySelectorAll(".showtasks1");
+      tasks = taskContainer.querySelectorAll(".todoTask");
       expect(tasks.length).toBe(2);
       const deleteButton = tasks[0].querySelector(".deletebtn");
       expect(deleteButton.querySelector(".deletebtni").src).toContain('bin.png');
       expect(deleteButton.disabled).toBe(false);
       deleteButton.click();
-      tasks = showtasks.querySelectorAll(".showtasks1");
+      tasks = taskContainer.querySelectorAll(".todoTask");
       expect(tasks.length).toBe(1);
       expect(tasks[0].querySelector(".taskname").value).toBe(randomString2);
       expect(localStorage.setItem).toHaveBeenCalled();
@@ -345,7 +345,7 @@ describe('Javascript testing', () => {
   describe('Edit functionality testing', () => {
     test('should enable editing when edit button is clicked', () => {
       addTask(randomString)
-      const task = showtasks.querySelector(".showtasks1");
+      const task = taskContainer.querySelector(".todoTask");
       const editButton = task.querySelector(".editbtn");
       expect(editButton.querySelector(".editbtni").src).toContain('edit.png');
       editButton.click();
@@ -358,7 +358,7 @@ describe('Javascript testing', () => {
 
     test('should save task when save button is clicked after editing', () => {
       addTask(randomString)
-      const task = showtasks.querySelector(".showtasks1");
+      const task = taskContainer.querySelector(".todoTask");
       const editButton = task.querySelector(".editbtn");
       editButton.click(); // Enter edit mode
       const taskName = task.querySelector(".taskname");
@@ -371,7 +371,7 @@ describe('Javascript testing', () => {
 
     test('should show error message and not save if task name is empty when saving', () => {
       addTask(randomString)
-      const task = showtasks.querySelector(".showtasks1");
+      const task = taskContainer.querySelector(".todoTask");
       const editButton = task.querySelector(".editbtn");
       editButton.click(); // Enter edit mode
       const taskName = task.querySelector(".taskname");
@@ -390,7 +390,7 @@ describe('Javascript testing', () => {
 
     test('should save task when Enter key is pressed while editing', () => {
       addTask(randomString)
-      const task = showtasks.querySelector(".showtasks1");
+      const task = taskContainer.querySelector(".todoTask");
       const editButton = task.querySelector(".editbtn");
       editButton.click(); // Enter edit mode
       const taskName = task.querySelector(".taskname");
@@ -403,7 +403,7 @@ describe('Javascript testing', () => {
 
     test('Should not save the the task when other keys are pressed while editing',()=>{
       addTask(randomString)
-      const task = showtasks.querySelector(".showtasks1");
+      const task = taskContainer.querySelector(".todoTask");
       const editButton = task.querySelector(".editbtn");
       editButton.click(); // Enter edit mode
       const taskName = task.querySelector(".taskname");
@@ -419,7 +419,7 @@ describe('Javascript testing', () => {
     test('should prevent editing if another task is being edited', () => {
       addTask(randomString)
       addTask(randomString2)
-      let tasks = showtasks.querySelectorAll(".showtasks1");
+      let tasks = taskContainer.querySelectorAll(".todoTask");
       const editButton1= tasks[0].querySelector(".editbtn");
       const editButton2= tasks[1].querySelector(".editbtn");
       editButton1.click();
@@ -430,21 +430,21 @@ describe('Javascript testing', () => {
 
     test('Delete all button should be disabled while editing',()=>{
       addTask(randomString)
-      let tasks = showtasks.querySelector(".showtasks1");
+      let tasks = taskContainer.querySelector(".todoTask");
       const editButton= tasks.querySelector(".editbtn");
       editButton.click();
       expect(deleteAllButton.disabled).toBe(true);
     })
     test('Input box should be disabled while editing',()=>{
       addTask(randomString)
-      let tasks = showtasks.querySelector(".showtasks1");
+      let tasks = taskContainer.querySelector(".todoTask");
       const editButton= tasks.querySelector(".editbtn");
       editButton.click();
       expect(inputBox.disabled).toBe(true);
     })
     test('Add button should be disabled while editing',()=>{
       addTask(randomString)
-      let tasks = showtasks.querySelector(".showtasks1");
+      let tasks = taskContainer.querySelector(".todoTask");
       const editButton= tasks.querySelector(".editbtn");
       editButton.click();
       expect(inputButton.disabled).toBe(true);
@@ -497,7 +497,7 @@ describe('Javascript testing', () => {
       addTask(randomString2, 'completed');
       all.click();
       filterTasks('all');
-      const tasks = showtasks.querySelectorAll(".showtasks1");
+      const tasks = taskContainer.querySelectorAll(".todoTask");
       expect(tasks.length).toBe(2);
       expect(tasks[0].querySelector(".taskname").value).toBe(randomString);
       expect(tasks[1].querySelector(".taskname").value).toBe(randomString2);
@@ -508,7 +508,7 @@ describe('Javascript testing', () => {
       addTask(randomString2, 'completed');
       assigned.click();
       filterTasks('assigned');
-      let tasks = showtasks.querySelectorAll(".showtasks1[data-status='assigned']");
+      let tasks = taskContainer.querySelectorAll(".todoTask[data-status='assigned']");
       expect(tasks[0].querySelector(".taskname").value).toBe(randomString);
       expect(tasks.length).toBe(1);
     });
@@ -518,7 +518,7 @@ describe('Javascript testing', () => {
       addTask(randomString2, 'completed');
       completed.click();
       filterTasks('completed');
-      let tasks = showtasks.querySelectorAll(".showtasks1[data-status='completed']");
+      let tasks = taskContainer.querySelectorAll(".todoTask[data-status='completed']");
       expect(tasks[0].querySelector(".taskname").value).toBe(randomString2);
       expect(tasks.length).toBe(1);
     });
@@ -528,7 +528,7 @@ describe('Javascript testing', () => {
       addTask(randomString2);
       completed.click();
       filterTasks('completed');
-      let tasks = showtasks.querySelectorAll(".showtasks1[data-status='completed']");
+      let tasks = taskContainer.querySelectorAll(".todoTask[data-status='completed']");
       expect(tasks.length).toBe(0);
     });
 
@@ -537,7 +537,7 @@ describe('Javascript testing', () => {
       addTask(randomString2, 'completed');
       assigned.click();
       filterTasks('assigned');
-      let tasks = showtasks.querySelectorAll(".showtasks1[data-status='assigned']");
+      let tasks = taskContainer.querySelectorAll(".todoTask[data-status='assigned']");
       expect(tasks.length).toBe(0);
     });
   });
@@ -545,13 +545,13 @@ describe('Javascript testing', () => {
     test('should delete all tasks when delete all button is clicked', () => {
       addTask(randomString)
       addTask(randomString2)
-      let tasksBeforeDeleteAll = showtasks.querySelectorAll(".showtasks1");
+      let tasksBeforeDeleteAll = taskContainer.querySelectorAll(".todoTask");
       expect(tasksBeforeDeleteAll.length).toBe(2);
       expect(deleteAllButton.disabled).toBe(false);
       deleteAllButton.click();
       const toastConfirm = document.querySelector("#toast-confirm");
       toastConfirm.click();
-      const tasksAfterDeleteAll = showtasks.querySelectorAll(".showtasks1");
+      const tasksAfterDeleteAll = taskContainer.querySelectorAll(".todoTask");
       expect(tasksAfterDeleteAll.length).toBe(0);
       expect(errormessage.innerHTML).toBe('Tasks deleted successfully.');
       expect(localStorage.setItem).toHaveBeenCalledWith("tasks", JSON.stringify([]));
@@ -579,7 +579,7 @@ describe('Javascript testing', () => {
       deleteAllButton.click();
       const toastCancel = document.querySelector("#toast-cancel");
       toastCancel.click();
-      const remainingTasks = document.querySelectorAll(".showtasks1");
+      const remainingTasks = document.querySelectorAll(".todoTask");
       expect(remainingTasks.length).toBe(2);
     });
     test('Delete all button should be disabled when there are no tasks',()=>{
@@ -593,7 +593,7 @@ describe('Javascript testing', () => {
       deleteAllTasks()
       const toastConfirm = document.querySelector("#toast-confirm");
       toastConfirm.click();
-      expect(document.querySelectorAll(".showtasks1").length).toBe(1); 
+      expect(document.querySelectorAll(".todoTask").length).toBe(1); 
   });
   
   })
@@ -607,7 +607,7 @@ describe('Javascript testing', () => {
       deleteAllButton.click();
       const toastConfirm = document.querySelector("#toast-confirm");
       toastConfirm.click();
-      expect(document.querySelectorAll(".showtasks1").length).toBe(0);
+      expect(document.querySelectorAll(".todoTask").length).toBe(0);
       expect(errormessage.style.color).toBe("green");
       expect(errormessage.innerHTML).toBe("Tasks deleted successfully.");
     });
@@ -616,7 +616,7 @@ describe('Javascript testing', () => {
       deleteAllButton.click();
       const toastConfirm = document.querySelector("#toast-confirm");
       toastConfirm.click();
-      const remainingTasks = document.querySelectorAll(".showtasks1");
+      const remainingTasks = document.querySelectorAll(".todoTask");
       expect(remainingTasks.length).toBe(1);
       expect(remainingTasks[0].querySelector(".taskname").value).toBe(randomString2);
       expect(errormessage.style.color).toBe("green");
@@ -628,7 +628,7 @@ describe('Javascript testing', () => {
       deleteAllButton.click();
       const toastConfirm = document.querySelector("#toast-confirm");
       toastConfirm.click();
-      const remainingTasks = showtasks.querySelectorAll(".showtasks1");
+      const remainingTasks = taskContainer.querySelectorAll(".todoTask");
       expect(remainingTasks.length).toBe(1);
       expect(remainingTasks[0].querySelector(".taskname").value).toBe(randomString);
       expect(errormessage.style.color).toBe("green");
@@ -732,7 +732,7 @@ describe('Javascript testing', () => {
   
     test('should load tasks from localStorage on DOMContentLoaded', () => {
       loadTasksFromLocalStorage();
-      const taskContainers = document.querySelectorAll('.showtasks1');
+      const taskContainers = document.querySelectorAll('.todoTask');
         expect(taskContainers.length).toBe(2);
 
         const firstTask = taskContainers[0];
@@ -749,18 +749,18 @@ describe('Javascript testing', () => {
     test('should not display any tasks if localStorage is empty', () => {
       localStorage.getItem.mockReturnValue(JSON.stringify([]));
       loadTasksFromLocalStorage();
-      const tasks = showtasks.querySelectorAll(".showtasks1");
+      const tasks = taskContainer.querySelectorAll(".todoTask");
       expect(tasks.length).toBe(0);
     });
     test('should persist tasks after page reload', () => {
       loadTasksFromLocalStorage(); 
-      const tasks = showtasks.querySelectorAll(".showtasks1");
+      const tasks = taskContainer.querySelectorAll(".todoTask");
       expect(tasks.length).toBe(2);
     });
     test('should handle null from localStorage', () => {
       localStorage.getItem.mockReturnValue(null);
       loadTasksFromLocalStorage();
-      const tasks = document.querySelectorAll(".showtasks1");
+      const tasks = document.querySelectorAll(".todoTask");
       expect(tasks.length).toBe(0);
   });
     
@@ -771,16 +771,16 @@ describe('Javascript testing', () => {
       addTask(randomString);
       addTask(randomString2, 'completed');
       assignedTasks()
-      const tasks=document.querySelectorAll(".showtasks1[data-status='assigned']")
+      const tasks=document.querySelectorAll(".todoTask[data-status='assigned']")
       tasks.forEach(task => {
         expect(task.style.display).toBe('flex');
       })
       allTasks()
-      const atasks=document.querySelectorAll(".showtasks1")
+      const atasks=document.querySelectorAll(".todoTask")
       atasks.forEach(task => {
         expect(task.style.display).toBe('flex');
       })
-      const ctasks = showtasks.querySelectorAll(".showtasks1[data-status='completed']");
+      const ctasks = taskContainer.querySelectorAll(".todoTask[data-status='completed']");
       completedTasks()
       ctasks.forEach(task => {
         expect(task.style.display).toBe('flex');
@@ -803,7 +803,7 @@ describe('Javascript testing', () => {
     test('Create button function testing',()=>{
       const {createButton}=require("./script.js")
       addTask(randomString);
-      const task = showtasks.querySelector(".showtasks1");
+      const task = taskContainer.querySelector(".todoTask");
       createButton("editbtn", "./images/edit.png", "editbtni","Edit the task")
       const editButton=task.querySelector('.editbtn')
       expect(editButton.querySelector(".editbtni").src).toContain('edit.png');
@@ -820,7 +820,7 @@ describe('Javascript testing', () => {
     test('checkForEmptystates function',()=>{
       const {checkForEmptyStates}=require("./script.js")
       const taskContainer = document.createElement('div');
-      taskContainer.className = 'showtasks1';
+      taskContainer.className = 'todoTask';
       taskContainer.setAttribute('data-status', 'pending');
       document.body.appendChild(taskContainer);
       checkForEmptyStates('all'); 

@@ -167,13 +167,13 @@ nav input#completed:checked ~ .animation {
   left: 66.66%;
 }
 
-.showtasks {
+.task-container {
   margin-top: 2%;
   height: 90%;
   overflow: auto;
 }
 
-.showtasks1 {
+.todoTask {
   height: 19%;
   padding: 0%;
   margin-top: 1%;

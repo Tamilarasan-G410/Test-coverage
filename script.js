@@ -1,7 +1,7 @@
 //query-selectors
 const inputBox = document.querySelector("#inputtask");
 const inputButton = document.querySelector(".button");
-const showtasks = document.querySelector(".showtasks");
+const taskContainer = document.querySelector(".task-container");
 const errormessage = document.querySelector(".error-message");
 const noTasksMessage = document.querySelector(".no-tasks-message");
 const noCompletedTasksMessage = document.querySelector(".no-completed-tasks-message");
@@ -45,24 +45,24 @@ checkForEmptyStates(currentFilter);
 document.addEventListener("DOMContentLoaded", loadTasksFromLocalStorage);
 
 //function to create the tasks
-function createshowtasks1(taskStatus) {
-    const showtasks1 = document.createElement("div");
-    showtasks1.classList.add("showtasks1");
-    showtasks.append(showtasks1);
-    showtasks1.state = taskStatus === "completed" ? 1 : 0;
-    showtasks1.setAttribute("data-status", taskStatus);
-    return showtasks1;
+function createtodoTask(taskStatus) {
+    const todoTask = document.createElement("div");
+    todoTask.classList.add("todoTask");
+    taskContainer.append(todoTask);
+    todoTask.state = taskStatus === "completed" ? 1 : 0;
+    todoTask.setAttribute("data-status", taskStatus);
+    return todoTask;
 }
 
 //function to get the taskname from the input form
-function createTaskName(showtasks1, taskName) {
+function createTaskName(todoTask, taskName) {
     const taskname = document.createElement("input");
     taskname.classList.add("taskname");
     taskname.value = taskName;
     taskname.readOnly=true;
     taskname.maxLength=150;
     taskname.style.backgroundColor="aliceblue";
-    showtasks1.append(taskname); 
+    todoTask.append(taskname); 
 }
 //function to create the buttons
 function createButton(buttonClass, imgSource, imgClass,title) {
@@ -76,21 +76,21 @@ function createButton(buttonClass, imgSource, imgClass,title) {
     return button;
 }
 //function to create the edit,check and delete button
-function createTaskButtons(showtasks1) {
+function createTaskButtons(todoTask) {
     const buttons = document.createElement("div");
     buttons.classList.add("buttons");
-    showtasks1.append(buttons);
+    todoTask.append(buttons);
 
     const editButton = createButton("editbtn", "./images/edit.png", "editbtni","Edit the task");
-    editButton.addEventListener("click", ()=> { editTask(showtasks1); });
+    editButton.addEventListener("click", ()=> { editTask(todoTask); });
     buttons.append(editButton);
 
     const checkButton = createButton("checkbtn", "./images/radio-button.png", "checkbtni","Complete the task");
-    checkButton.addEventListener("click", ()=> { completeTask(showtasks1); });
+    checkButton.addEventListener("click", ()=> { completeTask(todoTask); });
     buttons.append(checkButton);
     
     const deleteButton = createButton("deletebtn", "./images/bin.png", "deletebtni","Delete the task");
-    deleteButton.addEventListener("click", ()=> { deleteTask(showtasks1); });
+    deleteButton.addEventListener("click", ()=> { deleteTask(todoTask); });
     buttons.append(deleteButton);
 }
 // function to validate the input in the inputbox and call the above functions
@@ -110,9 +110,9 @@ function addTask(e) {
             errormessage.innerHTML="";
         }, 1800);
     } else {
-        const showtasks1 = createshowtasks1("assigned");
-        createTaskName(showtasks1, taskValue);
-        createTaskButtons(showtasks1);
+        const todoTask = createtodoTask("assigned");
+        createTaskName(todoTask, taskValue);
+        createTaskButtons(todoTask);
         errormessage.style.color="green";
         errormessage.innerHTML="Task added successfully";
         setTimeout(() => {
@@ -128,11 +128,11 @@ function addTask(e) {
 }
 // function that facilitates edit of the task
 let currentlyEditedTask = null;
-function editTask(showtasks1) {
-    const taskname = showtasks1.querySelector(".taskname");
-    const cb = showtasks1.querySelector(".checkbtn");
-    const eb = showtasks1.querySelector(".editbtn");
-    const db = showtasks1.querySelector(".deletebtn");
+function editTask(todoTask) {
+    const taskname = todoTask.querySelector(".taskname");
+    const cb = todoTask.querySelector(".checkbtn");
+    const eb = todoTask.querySelector(".editbtn");
+    const db = todoTask.querySelector(".deletebtn");
     const ebi = eb.querySelector(".editbtni");
 
     function saveIfValid() {
@@ -163,7 +163,7 @@ function editTask(showtasks1) {
     }
 
     if (taskname.readOnly) {
-        if (currentlyEditedTask && currentlyEditedTask !== showtasks1) {
+        if (currentlyEditedTask && currentlyEditedTask !== todoTask) {
             return;
         }
         taskname.readOnly = false;
@@ -177,16 +177,10 @@ function editTask(showtasks1) {
         inputButton.disabled = true;
         eb.title = "Save the task";
         ebi.src = "./images/diskette.png";
-        currentlyEditedTask = showtasks1;
+        currentlyEditedTask = todoTask;
     } else {
         saveTask();
     }
-
-    // taskname.addEventListener("focus", () => {
-    //     taskname.classList.remove("error");
-    //     taskname.placeholder = '';
-    // });
-
     taskname.addEventListener("input", () => {
         if (taskname.classList.contains("error")) {
             taskname.classList.remove("error");
@@ -201,21 +195,21 @@ function editTask(showtasks1) {
     });
 }
 // Function which facilitates completion of tasks
-function completeTask(showtasks1) {
-    const eb = showtasks1.querySelector(".editbtn");
-    const cb = showtasks1.querySelector(".checkbtn");
+function completeTask(todoTask) {
+    const eb = todoTask.querySelector(".editbtn");
+    const cb = todoTask.querySelector(".checkbtn");
     const cbi = cb.querySelector(".checkbtni");
-    const currentStatus = showtasks1.getAttribute("data-status");
+    const currentStatus = todoTask.getAttribute("data-status");
 
     if (currentStatus === "assigned") {
-        showtasks1.querySelector(".taskname").style.backgroundColor = "#D0D0D0";
-        showtasks1.setAttribute("data-status", "completed");
+        todoTask.querySelector(".taskname").style.backgroundColor = "#D0D0D0";
+        todoTask.setAttribute("data-status", "completed");
         cbi.src = "./images/check-mark.png";
         cb.title = "Undo task completion";
         eb.disabled = true;
     } else {
-        showtasks1.querySelector(".taskname").style.backgroundColor = "aliceblue";
-        showtasks1.setAttribute("data-status", "assigned");
+        todoTask.querySelector(".taskname").style.backgroundColor = "aliceblue";
+        todoTask.setAttribute("data-status", "assigned");
         cbi.src = "./images/radio-button.png";
         cb.title = "Complete the task";
         eb.disabled = false;
@@ -235,8 +229,8 @@ function filterTasks(currentFilter){
     }
 }
 //function which facilitates  deleting the task
-function deleteTask(showtasks1) {
-    showtasks1.remove();
+function deleteTask(todoTask) {
+    todoTask.remove();
     saveTasksToLocalStorage();
     filterTasks(currentFilter)
 }
@@ -279,7 +273,7 @@ function deleteAllTasks() {
         message = "Do you want to delete all completed tasks?";
     }
     showToast(message, () => {
-        const taskContainers = document.querySelectorAll(".showtasks1");
+        const taskContainers = document.querySelectorAll(".todoTask");
         let tasksToRemove = [];
 
         if (currentFilter === "all") {
@@ -317,7 +311,7 @@ function updateDeleteAllButtonText(currentFilter){
 
 //function to show tasks in all section
 function allTasks() {
-    const taskContainers = document.querySelectorAll(".showtasks1");
+    const taskContainers = document.querySelectorAll(".todoTask");
     taskContainers.forEach(task => {
         task.style.display = "flex";
     });
@@ -326,7 +320,7 @@ function allTasks() {
 }
 //function to show tasks in completed section 
 function completedTasks() {
-    const taskContainers = document.querySelectorAll(".showtasks1");
+    const taskContainers = document.querySelectorAll(".todoTask");
     taskContainers.forEach(task => {
         const status = task.getAttribute("data-status");
         if (status === "completed") {
@@ -340,7 +334,7 @@ function completedTasks() {
 }
 //function to show tasks in assigned section
 function assignedTasks() {
-    const taskContainers = document.querySelectorAll(".showtasks1");
+    const taskContainers = document.querySelectorAll(".todoTask");
     taskContainers.forEach(task => {
         const status = task.getAttribute("data-status");
         if (status === "assigned") {
@@ -354,7 +348,7 @@ function assignedTasks() {
 }
 // Function to show "no task" messages and disable the delete all button
 function checkForEmptyStates(filter) {
-    const taskContainers = document.querySelectorAll(".showtasks1");
+    const taskContainers = document.querySelectorAll(".todoTask");
     let hasTasks = false;
     let hasFilteredTasks = false;
 
@@ -387,7 +381,7 @@ function checkForEmptyStates(filter) {
 // function to store data in local storage
 function saveTasksToLocalStorage() {
     const tasks = [];
-    const taskContainers = document.querySelectorAll(".showtasks1");
+    const taskContainers = document.querySelectorAll(".todoTask");
     taskContainers.forEach(task => {
         const taskName = task.querySelector(".taskname").value;
         const taskStatus = task.getAttribute("data-status");
@@ -399,22 +393,22 @@ function saveTasksToLocalStorage() {
 function loadTasksFromLocalStorage() {
     const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
     tasks.forEach(task => {
-        const showtasks1 = createshowtasks1(task.status);
-        createTaskName(showtasks1, task.name);
-        createTaskButtons(showtasks1);
-        const taskNameInput = showtasks1.querySelector(".taskname");
-        const checkButtonImg = showtasks1.querySelector(".checkbtni");
-        const editButton = showtasks1.querySelector(".editbtn");
+        const todoTask = createtodoTask(task.status);
+        createTaskName(todoTask, task.name);
+        createTaskButtons(todoTask);
+        const taskNameInput = todoTask.querySelector(".taskname");
+        const checkButtonImg = todoTask.querySelector(".checkbtni");
+        const editButton = todoTask.querySelector(".editbtn");
 
         if (task.status === "completed") {
             taskNameInput.style.backgroundColor = "#D0D0D0";
             checkButtonImg.src = "./images/check-mark.png";
-            showtasks1.querySelector(".checkbtn").title = "Undo task completion";
+            todoTask.querySelector(".checkbtn").title = "Undo task completion";
             editButton.disabled = true;
         } else {
             taskNameInput.style.backgroundColor = "aliceblue";
             checkButtonImg.src = "./images/radio-button.png";
-            showtasks1.querySelector(".checkbtn").title = "Complete the task";
+            todoTask.querySelector(".checkbtn").title = "Complete the task";
             editButton.disabled = false;
         }
     });
