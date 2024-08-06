@@ -219,13 +219,16 @@ function completeTask(todoTask) {
     checkForEmptyStates(currentFilter);
 }
 function filterTasks(currentFilter){
-    
-    if (currentFilter === "all") {
-        allTasks();
-    } else if (currentFilter === "completed") {
-        completedTasks();
-    } else   {
-        assignedTasks();
+    switch(currentFilter){
+        case 'all':
+            allTasks();
+            break;
+        case 'assigned':
+            assignedTasks();
+            break;
+        case 'completed':
+            completedTasks();
+            break;
     }
 }
 //function which facilitates  deleting the task
